@@ -1,8 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Cats Games</title>
+
+  <!-- 👇 META TAGS TO PREVENT LINK PREVIEWS -->
+  <meta name="twitter:card" content="none">
+  <meta property="og:title" content="">
+  <meta property="og:description" content="">
+  <meta property="og:image" content="">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+
   <style>
     body {
       margin: 0;
@@ -51,7 +60,6 @@
     }
     .btn:hover { background: #f3e6ff; }
 
-    /* Message styling */
     .message-box {
       border: 5px double gold;
       padding: 30px;
@@ -69,25 +77,25 @@
       border-radius: 15px;
     }
 
-    /* Floating cats */
     .floating-cat {
       position: fixed;
       width: 100px;
       animation: floatCats linear infinite;
       z-index: 1;
     }
+
     @keyframes floatCats {
       from { transform: translateY(100vh); }
       to   { transform: translateY(-120vh); }
     }
 
-    /* Balloon Game */
     .balloon {
       position: absolute;
       cursor: pointer;
       width: 100px;
       animation: float linear infinite;
     }
+
     @keyframes float {
       from { transform: translateY(100vh); }
       to { transform: translateY(-120vh); }
@@ -125,9 +133,7 @@
   </div>
 
   <script>
-    // ==================
-    // Game 1: Roaming Cat (click to proceed)
-    // ==================
+    // Game 1
     const canvas = document.getElementById("catGame");
     const ctx = canvas.getContext("2d");
 
@@ -163,9 +169,6 @@
       }
     });
 
-    // ==================
-    // Game 2: Balloon Pop
-    // ==================
     function launchBalloons() {
       const game2 = document.getElementById("game2");
       for (let i = 0; i < 7; i++) {
@@ -189,9 +192,6 @@
       document.getElementById("passwordSection").classList.remove("hidden");
     }
 
-    // ==================
-    // Password Check
-    // ==================
     function checkPassword() {
       const input = document.getElementById("passwordInput").value;
       if (input.toLowerCase() === "wednesday") {
@@ -205,9 +205,6 @@
       }
     }
 
-    // ==================
-    // Live Typing Message
-    // ==================
     const fullMessage = "Happy legality ssob Joy ginawa ko tong website na to para sayo HAHA yun lang Happy 18th Birthday ulit and Congrants sa mga achievents mo ingat always.🐱🎉";
     let i = 0;
     function typeMessage() {
@@ -218,9 +215,6 @@
       }
     }
 
-    // ==================
-    // Floating Cats
-    // ==================
     function launchFloatingCats() {
       for (let j = 1; j <= 10; j++) {
         let cat = document.createElement("img");
@@ -232,9 +226,6 @@
       }
     }
 
-    // ==================
-    // Confetti Effect
-    // ==================
     function launchConfetti() {
       for (let i = 0; i < 100; i++) {
         const confetti = document.createElement("div");
@@ -249,10 +240,4 @@
       }
     }
 
-    const style = document.createElement("style");
-    style.innerHTML = `@keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }`;
-    document.head.appendChild(style);
-  </script>
-</body>
-</html>
-
+   
