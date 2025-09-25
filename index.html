@@ -1,0 +1,257 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday 🎉</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #7d3cff, #b266ff);
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      text-align: center;
+    }
+
+    h1 {
+      color: white;
+      font-size: 2.5em;
+      margin-top: 20px;
+    }
+
+    .hidden { display: none; }
+
+    .game, .password-section, .message-section {
+      margin: 20px auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      width: 80%;
+      max-width: 600px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .password-input {
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      font-size: 1em;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #fff;
+      color: #7d3cff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn:hover { background: #f3e6ff; }
+
+    /* Message styling */
+    .message-box {
+      border: 5px double gold;
+      padding: 30px;
+      background: white;
+      border-radius: 20px;
+      font-size: 1.3em;
+      color: #5a189a;
+      box-shadow: 0 0 30px gold;
+      position: relative;
+      z-index: 10;
+    }
+    .message-cat {
+      width: 250px;
+      margin-top: 20px;
+      border-radius: 15px;
+    }
+
+    /* Floating cats */
+    .floating-cat {
+      position: fixed;
+      width: 100px;
+      animation: floatCats linear infinite;
+      z-index: 1;
+    }
+    @keyframes floatCats {
+      from { transform: translateY(100vh); }
+      to   { transform: translateY(-120vh); }
+    }
+
+    /* Balloon Game */
+    .balloon {
+      position: absolute;
+      cursor: pointer;
+      width: 100px;
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      from { transform: translateY(100vh); }
+      to { transform: translateY(-120vh); }
+    }
+  </style>
+</head>
+<body>
+  <h1>HALA ANG POSA!!!</h1>
+
+  <!-- Game 1 -->
+  <div id="game1" class="game">
+    <h2>Game 1: Catch the Running Cat 🐾 (Click mo ang Posa!)</h2>
+    <canvas id="catGame" width="500" height="300"></canvas>
+  </div>
+
+  <!-- Game 2 -->
+  <div id="game2" class="game hidden">
+    <h2>Game 2: Pop the Cat Balloons(Click mo ang Posa!) 🎈</h2>
+  </div>
+
+  <!-- Password Section -->
+  <div id="passwordSection" class="password-section hidden">
+    <h2>Hint:01010000 01110101 01110011 01100001</h2>
+    <input id="passwordInput" type="password" class="password-input" placeholder="Enter password">
+    <button class="btn" onclick="checkPassword()">Unlock</button>
+  </div>
+
+  <!-- Message Section -->
+  <div id="messageSection" class="message-section hidden">
+    <div class="message-box">
+      <h2 id="typedMessage">💜</h2>
+      <p id="typedText"></p>
+      <img src="images/cat-birthday-hat.jpg" alt="Birthday Cat" class="message-cat">
+    </div>
+  </div>
+
+  <script>
+    // ==================
+    // Game 1: Roaming Cat (click to proceed)
+    // ==================
+    const canvas = document.getElementById("catGame");
+    const ctx = canvas.getContext("2d");
+
+    let catX = 200, catY = 150;
+    let catDX = 2, catDY = 1;
+    const catSize = 60;
+    const catImg = new Image();
+    catImg.src = "games/cat-rose.gif";
+
+    function drawCat() {
+      ctx.drawImage(catImg, catX, catY, catSize, catSize);
+    }
+
+    function updateGame1() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawCat();
+      catX += catDX; catY += catDY;
+      if (catX <= 0 || catX + catSize >= canvas.width) catDX *= -1;
+      if (catY <= 0 || catY + catSize >= canvas.height) catDY *= -1;
+      requestAnimationFrame(updateGame1);
+    }
+    updateGame1();
+
+    canvas.addEventListener("click", function (e) {
+      const rect = canvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+      if (clickX >= catX && clickX <= catX + catSize &&
+          clickY >= catY && clickY <= catY + catSize) {
+        document.getElementById("game1").classList.add("hidden");
+        document.getElementById("game2").classList.remove("hidden");
+        launchBalloons();
+      }
+    });
+
+    // ==================
+    // Game 2: Balloon Pop
+    // ==================
+    function launchBalloons() {
+      const game2 = document.getElementById("game2");
+      for (let i = 0; i < 7; i++) {
+        let balloon = document.createElement("img");
+        balloon.src = "games/cat-balloons.gif";
+        balloon.className = "balloon";
+        balloon.style.left = Math.random() * 80 + "vw";
+        balloon.style.animationDuration = (5 + Math.random() * 5) + "s";
+        balloon.onclick = () => {
+          balloon.remove();
+          if (document.querySelectorAll(".balloon").length === 0) {
+            game2.innerHTML += '<button class="btn" onclick="finishGame2()">Proceed</button>';
+          }
+        };
+        game2.appendChild(balloon);
+      }
+    }
+
+    function finishGame2() {
+      document.getElementById("game2").classList.add("hidden");
+      document.getElementById("passwordSection").classList.remove("hidden");
+    }
+
+    // ==================
+    // Password Check
+    // ==================
+    function checkPassword() {
+      const input = document.getElementById("passwordInput").value;
+      if (input.toLowerCase() === "wednesday") {
+        document.getElementById("passwordSection").classList.add("hidden");
+        document.getElementById("messageSection").classList.remove("hidden");
+        launchConfetti();
+        typeMessage();
+        launchFloatingCats();
+      } else {
+        alert("Mali ang password Joyjoy! Try again 🐔");
+      }
+    }
+
+    // ==================
+    // Live Typing Message
+    // ==================
+    const fullMessage = "Happy legality ssob Joy ginawa ko tong website na to para sayo HAHA yun lang Happy 18th Birthday ulit and Congrants sa mga achievents mo ingat always.🐱🎉";
+    let i = 0;
+    function typeMessage() {
+      if (i < fullMessage.length) {
+        document.getElementById("typedText").innerHTML += fullMessage.charAt(i);
+        i++;
+        setTimeout(typeMessage, 80);
+      }
+    }
+
+    // ==================
+    // Floating Cats
+    // ==================
+    function launchFloatingCats() {
+      for (let j = 1; j <= 10; j++) {
+        let cat = document.createElement("img");
+        cat.src = "floating/cat" + j + ".gif";
+        cat.className = "floating-cat";
+        cat.style.left = Math.random() * 90 + "vw";
+        cat.style.animationDuration = (5 + Math.random() * 5) + "s";
+        document.body.appendChild(cat);
+      }
+    }
+
+    // ==================
+    // Confetti Effect
+    // ==================
+    function launchConfetti() {
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement("div");
+        confetti.innerHTML = "🎉";
+        confetti.style.position = "fixed";
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.top = "-10px";
+        confetti.style.fontSize = "24px";
+        confetti.style.animation = `fall ${3 + Math.random() * 2}s linear`;
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+
+    const style = document.createElement("style");
+    style.innerHTML = `@keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }`;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
